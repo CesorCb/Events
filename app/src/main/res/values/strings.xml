@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">EventsPrueba3</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="btn_update_event">Actualizar</string>
+    <string name="tv_edit_title">Editar Evento</string>
+    <string name="dialog_delete_title">¿Eliminar evento?</string>
+    <string name="dialog_delete_confirm">Eliminar</string>
+    <string name="dialog_delete_cancel">Cancelar</string>
+    <string name="fab_add_event">Añadir evento</string>
+</resources>
