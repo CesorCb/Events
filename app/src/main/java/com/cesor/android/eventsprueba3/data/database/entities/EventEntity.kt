@@ -16,7 +16,8 @@ data class EventEntity(
     @ColumnInfo(name = "id") var id: Long = 0,
     @ColumnInfo(name = "name") var name: String,
     @ColumnInfo(name = "description") var description: String,
+    @ColumnInfo(name = "date") var date: String,
     @ColumnInfo(name = "photoUrl") var photoUrl: String = ""
 )
 
-fun Event.toDatabase() = EventEntity(id, name, description, photoUrl)
+fun Event.toDatabase() = EventEntity(id, name, description, date, photoUrl)

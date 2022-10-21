@@ -7,6 +7,7 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -83,6 +84,16 @@ class EventEditFragment : Fragment() {
         mBinding.imgBtnAddImage.setOnClickListener { checkGalleryPermission() }
 
         mBinding.btnDelete.setOnClickListener { confirmDelete(event) }
+
+        mBinding.etDate.setOnClickListener{ showDatePickerDialog()}
+    }
+
+    private fun showDatePickerDialog() {
+        val datePicker = DatePickerFragment { day, month, year -> onDateSelected(day, month, year) }
+        datePicker.show(parentFragmentManager, "datePicker")
+    }
+    private fun onDateSelected(day:Int, month:Int, year:Int){
+        mBinding.etDate.setText(getString(R.string.event_date,day, month, year))
     }
 
     private fun checkGalleryPermission() {
@@ -93,7 +104,6 @@ class EventEditFragment : Fragment() {
             == PackageManager.PERMISSION_GRANTED
         ) {
             openGallery()
-
         } else {
             requestCameraPermission()
         }
@@ -117,8 +127,19 @@ class EventEditFragment : Fragment() {
         val name = mBinding.etEventName.text.toString()
         val description = mBinding.etEventDescription.text.toString()
         val photoUrl = mPhotoSelectedUri
-        event = Event(name = name, description = description, photoUrl = photoUrl.toString())
-        eventViewModel.insertEvents(event)
+        val date = mBinding.etDate.text.toString()
+
+        if (eventViewModel.isEditMode.value!!){
+            Toast.makeText(context, "Se guardaron los cambios del evento", Toast.LENGTH_SHORT).show()
+            val id = event.id
+            event = Event(id = id, name = name, description = description,date = date, photoUrl = photoUrl.toString())
+            Log.i("Ayutoo3", "${event.id}")
+            eventViewModel.updateEvent(event)
+        } else {
+            event = Event( name = name, description = description,date = date, photoUrl = photoUrl.toString())
+            eventViewModel.insertEvents(event)
+            Toast.makeText(context, "Has creado un nuevo evento", Toast.LENGTH_SHORT).show()
+        }
     }
 
 
@@ -129,8 +150,10 @@ class EventEditFragment : Fragment() {
             mBinding.btnCreateEvent.text = getString(R.string.btn_update_event)
             mBinding.btnDelete.visibility = View.VISIBLE
             event = eventViewModel.event.value!!
+            Log.i("Ayutoo2", "${event.id}")
             mBinding.etEventName.setText(event.name)
             mBinding.etEventDescription.setText(event.description)
+            mBinding.etDate.setText(event.date)
             Glide.with(mBinding.root)
                 .load(event.photoUrl)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)

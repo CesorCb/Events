@@ -5,6 +5,7 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Update
 import com.cesor.android.eventsprueba3.data.database.entities.EventEntity
 
 /****
@@ -25,4 +26,7 @@ interface EventDao {
 
     @Delete
     suspend fun deleteEvent(event: EventEntity)
+
+    @Update
+    suspend fun updateEvent(event: EventEntity)
 }

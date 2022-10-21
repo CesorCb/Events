@@ -13,7 +13,7 @@ class EventsApp: Application() {
 
     companion object{
         lateinit var database: EventDatabase
-        private const val DATABASE_NAME = "event_database"
+        private const val DATABASE_NAME = "events_database"
     }
 
     override fun onCreate() {

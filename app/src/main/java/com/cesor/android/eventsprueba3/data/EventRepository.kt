@@ -27,4 +27,7 @@ class EventRepository {
     suspend fun deleteEvent(event: EventEntity){
         EventsApp.database.eventDao().deleteEvent(event)
     }
+    suspend fun updateEvent(event: EventEntity){
+        EventsApp.database.eventDao().updateEvent(event)
+    }
 }

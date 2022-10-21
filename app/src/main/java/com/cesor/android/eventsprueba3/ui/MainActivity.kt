@@ -1,6 +1,7 @@
 package com.cesor.android.eventsprueba3.ui
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -59,6 +60,7 @@ class MainActivity : AppCompatActivity(), OnClickListener {
     //OnClickListener
     override fun onClick(event: Event) {
         eventViewModel.event.value = event
+        Log.i("ayutoo1","$event")
         eventViewModel.isEditMode.value = true
         launchEditFragment()
     }

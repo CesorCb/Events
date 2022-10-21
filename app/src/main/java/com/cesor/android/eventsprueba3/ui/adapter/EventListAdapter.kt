@@ -30,6 +30,7 @@ class EventListAdapter(private val listener: OnClickListener) :
             setListener(event)
             binding.tvEventTitle.text = event.name
             binding.tvEventDescription.text = event.description
+            binding.tvDate.text = event.date
             Glide.with(binding.root)
                 .load(event.photoUrl)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)

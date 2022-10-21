@@ -16,6 +16,7 @@ class EventViewModel : ViewModel() {
     private val insertEventUseCase = InsertEventUseCase()
     private val deleteEventsUseCase = DeleteEventsUseCase()
     private val deleteEventUseCase = DeleteEventUseCase()
+    private val updateEventUseCase = UpdateEventUseCase()
 
     val eventList = MutableLiveData<MutableList<Event>?>()
     val event = MutableLiveData<Event>()
@@ -24,7 +25,8 @@ class EventViewModel : ViewModel() {
     fun setEventList() {
         viewModelScope.launch {
             val events = getAllEventsUseCase()
-            if (!events.isNullOrEmpty()) {
+            //Funcionaba con !events.isNullOrEmpty(
+            if (events.isNotEmpty()) {
                 eventList.postValue(events)
             } else eventList.postValue(mutableListOf())
         }
@@ -52,6 +54,12 @@ class EventViewModel : ViewModel() {
     fun deleteEvent(event: Event){
         viewModelScope.launch {
             deleteEventUseCase(event)
+            refreshEventList()
+        }
+    }
+    fun updateEvent(event: Event){
+        viewModelScope.launch {
+            updateEventUseCase(event)
             refreshEventList()
         }
     }
