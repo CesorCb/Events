@@ -33,11 +33,11 @@ class EventListAdapter(private val listener: OnClickListener) :
             binding.tvEventDescription.text = event.description
             binding.tvDate.text = event.date
             binding.imgEventImage.setImageURI(event.photoUrl.toUri())
-            Glide.with(binding.root)
-                .load(event.photoUrl)
+            /*Glide.with(binding.root)
+                .load(event.photoUrl.toUri())
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .centerCrop()
-                .into(binding.imgEventImage)
+                .into(binding.imgEventImage)*/
         }
     }
 

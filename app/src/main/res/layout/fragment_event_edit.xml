@@ -52,16 +52,28 @@
             android:layout_height="match_parent" />
     </com.google.android.material.textfield.TextInputLayout>
 
-    <EditText
-        android:id="@+id/etDate"
-        android:layout_width="match_parent"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/tilEventDate"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:hint="Selecciona el día"
-        android:clickable="false"
-        android:focusable="false"
-        app:layout_constraintTop_toBottomOf="@id/tilEventDescription"
+        android:layout_marginVertical="8dp"
+        android:hint="Fecha del evento"
+        android:clickable="true"
+        android:focusable="true"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintTop_toBottomOf="@id/tilEventDescription"
+        >
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etEventDate"
+            android:clickable="false"
+            android:focusable="false"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+
 
     <TextView
         android:id="@+id/tvAddImage"
@@ -71,7 +83,7 @@
         android:text="Ingresa imagen del evento"
         android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/etDate" />
+        app:layout_constraintTop_toBottomOf="@+id/tilEventDate" />
 
 
     <ImageView

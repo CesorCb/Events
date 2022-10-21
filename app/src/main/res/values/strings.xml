@@ -9,6 +9,8 @@
     <string name="dialog_delete_cancel">Cancelar</string>
     <string name="fab_add_event">Añadir evento</string>
     <string name="event_date">%1$d/%2$d/%3$d</string>
+    <string name="helper_text_required">Requerido</string>
+    <string name="edit_store_save_message_valid">Revisa los campos requeridos</string>
 
 
 </resources>

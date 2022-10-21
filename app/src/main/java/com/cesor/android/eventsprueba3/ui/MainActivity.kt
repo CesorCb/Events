@@ -3,6 +3,8 @@ package com.cesor.android.eventsprueba3.ui
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.window.OnBackInvokedDispatcher
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -14,6 +16,7 @@ import com.cesor.android.eventsprueba3.ui.adapter.OnClickListener
 import com.cesor.android.eventsprueba3.ui.viewModel.EventViewModel
 
 class MainActivity : AppCompatActivity(), OnClickListener {
+
     private lateinit var binding: ActivityMainBinding
     private var mAdapter = EventListAdapter(this)
     private val eventViewModel: EventViewModel by viewModels()
@@ -23,6 +26,7 @@ class MainActivity : AppCompatActivity(), OnClickListener {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
         eventViewModel.setEventList()
         setupRecyclerView()
         setupObservers()
@@ -41,7 +45,7 @@ class MainActivity : AppCompatActivity(), OnClickListener {
         eventViewModel.eventList.observe(this) {
             mAdapter.submitList(it)
         }
-        eventViewModel.isFabVisible.observe(this){
+        eventViewModel.isFabVisible.observe(this) {
             if (it) binding.fabAddEvent.visibility = View.VISIBLE
             else binding.fabAddEvent.visibility = View.GONE
         }
@@ -61,13 +65,11 @@ class MainActivity : AppCompatActivity(), OnClickListener {
         fragmentTransaction.addToBackStack(null)
         fragmentTransaction.commit()
         eventViewModel.isFabVisible.value = false
-        Log.i("ayutoo11","${eventViewModel.isFabVisible.value}")
     }
 
     //OnClickListener
     override fun onClick(event: Event) {
         eventViewModel.event.value = event
-        Log.i("ayutoo1","$event")
         eventViewModel.isEditMode.value = true
         launchEditFragment()
     }

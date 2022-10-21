@@ -7,17 +7,15 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
+import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.cesor.android.eventsprueba3.R
 import com.cesor.android.eventsprueba3.databinding.FragmentEventEditBinding
 import com.cesor.android.eventsprueba3.domain.Event
@@ -51,13 +49,14 @@ class EventEditFragment : Fragment() {
     ) {
         if (it.resultCode == Activity.RESULT_OK) {
             mPhotoSelectedUri = it.data?.data
+            mBinding.imgPhoto.setImageURI(mPhotoSelectedUri)/*
             with(mBinding) {
                 Glide.with(mBinding.root)
                     .load(mPhotoSelectedUri)
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .centerCrop()
                     .into(imgPhoto)
-            }
+            }*/
         }
     }
 
@@ -80,10 +79,10 @@ class EventEditFragment : Fragment() {
     }
 
     private fun setupButtons() {
-        mBinding.btnCreateEvent.setOnClickListener { createEvent() }
+        mBinding.btnCreateEvent.setOnClickListener { saveEvent() }
         mBinding.imgBtnAddImage.setOnClickListener { checkGalleryPermission() }
         mBinding.btnDelete.setOnClickListener { confirmDelete(event) }
-        mBinding.etDate.setOnClickListener { showDatePickerDialog() }
+        mBinding.etEventDate.setOnClickListener { showDatePickerDialog() }
     }
 
     private fun showDatePickerDialog() {
@@ -92,7 +91,7 @@ class EventEditFragment : Fragment() {
     }
 
     private fun onDateSelected(day: Int, month: Int, year: Int) {
-        mBinding.etDate.setText(getString(R.string.event_date, day, month, year))
+        mBinding.etEventDate.setText(getString(R.string.event_date, day, month, year))
     }
 
     private fun checkGalleryPermission() {
@@ -117,34 +116,42 @@ class EventEditFragment : Fragment() {
     }
 
     //CREACIÓN DE EVENTOS
-    private fun createEvent() {
+    private fun saveEvent() {
         val name = mBinding.etEventName.text.toString()
         val description = mBinding.etEventDescription.text.toString()
-        val photoUrl = mPhotoSelectedUri
-        val date = mBinding.etDate.text.toString()
-
-        if (eventViewModel.isEditMode.value!!) {
-            val id = event.id
-            event = Event(
-                id = id,
-                name = name,
-                description = description,
-                date = date,
-                photoUrl = photoUrl.toString()
-            )
-            Log.i("Ayutoo3", "${event.id}")
-            eventViewModel.updateEvent(event)
-            Toast.makeText(context, "Se guardaron los cambios del evento", Toast.LENGTH_SHORT)
-                .show()
+        val photoUrl = mPhotoSelectedUri.toString()
+        val date = mBinding.etEventDate.text.toString()
+        if (name.isNotEmpty() || description.isNotEmpty() || photoUrl.isNullOrEmpty() || date.isNotEmpty()) {
+            if (eventViewModel.isEditMode.value!!) {
+                val event = Event(
+                    id = event.id,
+                    name = name,
+                    description = description,
+                    date = date,
+                    photoUrl = if (mPhotoSelectedUri == null) event.photoUrl else photoUrl
+                )
+                //Actualiza
+                eventViewModel.updateEvent(event)
+                Toast.makeText(
+                    context,
+                    "Se guardaron los cambios del evento",
+                    Toast.LENGTH_SHORT
+                )
+                    .show()
+            } else {
+                event = Event(
+                    name = name,
+                    description = description,
+                    date = date,
+                    photoUrl = photoUrl.toString()
+                )
+                //Crea
+                eventViewModel.insertEvents(event)
+                Toast.makeText(context, "Has creado un nuevo evento", Toast.LENGTH_SHORT).show()
+            }
         } else {
-            event = Event(
-                name = name,
-                description = description,
-                date = date,
-                photoUrl = photoUrl.toString()
-            )
-            eventViewModel.insertEvents(event)
-            Toast.makeText(context, "Has creado un nuevo evento", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), "Debes rellenar todos los campos", Toast.LENGTH_SHORT)
+                .show()
         }
     }
 
@@ -155,12 +162,10 @@ class EventEditFragment : Fragment() {
             mBinding.btnCreateEvent.text = getString(R.string.btn_update_event)
             mBinding.btnDelete.visibility = View.VISIBLE
             event = eventViewModel.event.value!!
-            Log.i("Ayutoo2", "${event.id}")
             mBinding.etEventName.setText(event.name)
             mBinding.etEventDescription.setText(event.description)
-            mBinding.etDate.setText(event.date)
-            Glide.with(mBinding.root).load(event.photoUrl).diskCacheStrategy(DiskCacheStrategy.ALL)
-                .centerCrop().into(mBinding.imgPhoto)
+            mBinding.etEventDate.setText(event.date)
+            mBinding.imgPhoto.setImageURI(event.photoUrl.toUri())
         } else {
             Event(0, "", "", "")
         }
