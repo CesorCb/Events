@@ -2,6 +2,7 @@ package com.cesor.android.eventsprueba3.ui
 
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -40,6 +41,10 @@ class MainActivity : AppCompatActivity(), OnClickListener {
         eventViewModel.eventList.observe(this) {
             mAdapter.submitList(it)
         }
+        eventViewModel.isFabVisible.observe(this){
+            if (it) binding.fabAddEvent.visibility = View.VISIBLE
+            else binding.fabAddEvent.visibility = View.GONE
+        }
     }
 
     private fun setupButtons() {
@@ -55,6 +60,8 @@ class MainActivity : AppCompatActivity(), OnClickListener {
         fragmentTransaction.add(R.id.containerMain, fragment, EventEditFragment::class.java.name)
         fragmentTransaction.addToBackStack(null)
         fragmentTransaction.commit()
+        eventViewModel.isFabVisible.value = false
+        Log.i("ayutoo11","${eventViewModel.isFabVisible.value}")
     }
 
     //OnClickListener
@@ -63,5 +70,10 @@ class MainActivity : AppCompatActivity(), OnClickListener {
         Log.i("ayutoo1","$event")
         eventViewModel.isEditMode.value = true
         launchEditFragment()
+    }
+
+    override fun onBackPressed() {
+        eventViewModel.isFabVisible.value = true
+        super.onBackPressed()
     }
 }

@@ -21,6 +21,7 @@ class EventViewModel : ViewModel() {
     val eventList = MutableLiveData<MutableList<Event>?>()
     val event = MutableLiveData<Event>()
     val isEditMode = MutableLiveData(false)
+    val isFabVisible = MutableLiveData(true)
 
     fun setEventList() {
         viewModelScope.launch {

@@ -27,35 +27,39 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 class EventEditFragment : Fragment() {
 
-    private val eventViewModel: EventViewModel by activityViewModels()
-    private var isEditMode = false
     private lateinit var mBinding: FragmentEventEditBinding
     private lateinit var event: Event
+    private val eventViewModel: EventViewModel by activityViewModels()
+    private var isEditMode = false
     private var mPhotoSelectedUri: Uri? = null
-    private val requestPermissionLauncher =
-        registerForActivityResult(
-            ActivityResultContracts.RequestPermission()
-        ) { isGranted: Boolean ->
-            if (isGranted) {
-                openGallery()
-            } else {
-                Toast.makeText(requireContext(), "El permiso no ha sido otorgado",Toast.LENGTH_SHORT).show()
-            }
+    private val requestPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted: Boolean ->
+        if (isGranted) {
+            openGallery()
+        } else {
+            Toast.makeText(
+                requireContext(),
+                "El permiso no ha sido otorgado",
+                Toast.LENGTH_SHORT
+            ).show()
         }
+    }
 
-    private val galleryResult =
-        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-            if (it.resultCode == Activity.RESULT_OK) {
-                mPhotoSelectedUri = it.data?.data
-                with(mBinding) {
-                    Glide.with(mBinding.root)
-                        .load(mPhotoSelectedUri)
-                        .diskCacheStrategy(DiskCacheStrategy.ALL)
-                        .centerCrop()
-                        .into(imgPhoto)
-                }
+    private val galleryResult = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) {
+        if (it.resultCode == Activity.RESULT_OK) {
+            mPhotoSelectedUri = it.data?.data
+            with(mBinding) {
+                Glide.with(mBinding.root)
+                    .load(mPhotoSelectedUri)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .centerCrop()
+                    .into(imgPhoto)
             }
         }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -72,41 +76,31 @@ class EventEditFragment : Fragment() {
     }
 
     private fun setupObservers() {
-        eventViewModel.isEditMode.observe(requireActivity()) {
-            isEditMode = it
-        }
+        eventViewModel.isEditMode.observe(requireActivity()) { isEditMode = it }
     }
 
     private fun setupButtons() {
-        mBinding.btnCreateEvent.setOnClickListener {
-            createEvent()
-        }
+        mBinding.btnCreateEvent.setOnClickListener { createEvent() }
         mBinding.imgBtnAddImage.setOnClickListener { checkGalleryPermission() }
-
         mBinding.btnDelete.setOnClickListener { confirmDelete(event) }
-
-        mBinding.etDate.setOnClickListener{ showDatePickerDialog()}
+        mBinding.etDate.setOnClickListener { showDatePickerDialog() }
     }
 
     private fun showDatePickerDialog() {
         val datePicker = DatePickerFragment { day, month, year -> onDateSelected(day, month, year) }
         datePicker.show(parentFragmentManager, "datePicker")
     }
-    private fun onDateSelected(day:Int, month:Int, year:Int){
-        mBinding.etDate.setText(getString(R.string.event_date,day, month, year))
+
+    private fun onDateSelected(day: Int, month: Int, year: Int) {
+        mBinding.etDate.setText(getString(R.string.event_date, day, month, year))
     }
 
     private fun checkGalleryPermission() {
         if (ContextCompat.checkSelfPermission(
                 requireContext(),
                 Manifest.permission.READ_EXTERNAL_STORAGE
-            )
-            == PackageManager.PERMISSION_GRANTED
-        ) {
-            openGallery()
-        } else {
-            requestCameraPermission()
-        }
+            ) == PackageManager.PERMISSION_GRANTED
+        ) openGallery() else requestCameraPermission()
     }
 
     private fun requestCameraPermission() {
@@ -129,19 +123,30 @@ class EventEditFragment : Fragment() {
         val photoUrl = mPhotoSelectedUri
         val date = mBinding.etDate.text.toString()
 
-        if (eventViewModel.isEditMode.value!!){
-            Toast.makeText(context, "Se guardaron los cambios del evento", Toast.LENGTH_SHORT).show()
+        if (eventViewModel.isEditMode.value!!) {
             val id = event.id
-            event = Event(id = id, name = name, description = description,date = date, photoUrl = photoUrl.toString())
+            event = Event(
+                id = id,
+                name = name,
+                description = description,
+                date = date,
+                photoUrl = photoUrl.toString()
+            )
             Log.i("Ayutoo3", "${event.id}")
             eventViewModel.updateEvent(event)
+            Toast.makeText(context, "Se guardaron los cambios del evento", Toast.LENGTH_SHORT)
+                .show()
         } else {
-            event = Event( name = name, description = description,date = date, photoUrl = photoUrl.toString())
+            event = Event(
+                name = name,
+                description = description,
+                date = date,
+                photoUrl = photoUrl.toString()
+            )
             eventViewModel.insertEvents(event)
             Toast.makeText(context, "Has creado un nuevo evento", Toast.LENGTH_SHORT).show()
         }
     }
-
 
     //EDICIÓN DE EVENTOS
     private fun setupUiEvents() {
@@ -154,11 +159,8 @@ class EventEditFragment : Fragment() {
             mBinding.etEventName.setText(event.name)
             mBinding.etEventDescription.setText(event.description)
             mBinding.etDate.setText(event.date)
-            Glide.with(mBinding.root)
-                .load(event.photoUrl)
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .centerCrop()
-                .into(mBinding.imgPhoto)
+            Glide.with(mBinding.root).load(event.photoUrl).diskCacheStrategy(DiskCacheStrategy.ALL)
+                .centerCrop().into(mBinding.imgPhoto)
         } else {
             Event(0, "", "", "")
         }
@@ -171,12 +173,9 @@ class EventEditFragment : Fragment() {
 
     //Eliminar evento
     private fun confirmDelete(event: Event) {
-        MaterialAlertDialogBuilder(requireContext())
-            .setTitle(getString(R.string.dialog_delete_title))
+        MaterialAlertDialogBuilder(requireContext()).setTitle(getString(R.string.dialog_delete_title))
             .setPositiveButton(R.string.dialog_delete_confirm) { _, _ ->
                 eventViewModel.deleteEvent(event)
-            }
-            .setNegativeButton(R.string.dialog_delete_cancel, null)
-            .show()
+            }.setNegativeButton(R.string.dialog_delete_cancel, null).show()
     }
 }
