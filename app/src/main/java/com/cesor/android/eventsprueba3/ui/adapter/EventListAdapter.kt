@@ -3,6 +3,7 @@ package com.cesor.android.eventsprueba3.ui.adapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.net.toUri
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
@@ -31,6 +32,7 @@ class EventListAdapter(private val listener: OnClickListener) :
             binding.tvEventTitle.text = event.name
             binding.tvEventDescription.text = event.description
             binding.tvDate.text = event.date
+            binding.imgEventImage.setImageURI(event.photoUrl.toUri())
             Glide.with(binding.root)
                 .load(event.photoUrl)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
