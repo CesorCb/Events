@@ -15,7 +15,7 @@
     </style>
 
 
-    <style name="datePickerTheme" parent="android:Theme.Material.Dialog">
+    <style name="datePickerTheme" parent="android:Theme.Material.Light.Dialog">
         <item name="android:colorAccent">#E65100</item>
     </style>
 </resources>

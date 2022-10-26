@@ -11,6 +11,16 @@
     <string name="event_date">%1$d/%2$d/%3$d</string>
     <string name="helper_text_required">Requerido</string>
     <string name="edit_store_save_message_valid">Revisa los campos requeridos</string>
+    <string name="btn_back">Volver atrás</string>
+    <string name="tv_event_create">Crear evento</string>
+    <string name="til_hint_event_name">Nombre del evento</string>
+    <string name="til_hint_event_description">Descripción del evento</string>
+    <string name="til_hint_event_date">Fecha del evento</string>
+    <string name="tv_add_image">Ingresa imagen del evento</string>
+    <string name="img_selected_image">Imagen del evento añadida</string>
+    <string name="img_btn_add_img">Añadir imagen del evento</string>
+    <string name="btn_event_create">Crear</string>
+    <string name="btn_event_delete">Eliminar</string>
 
 
 </resources>

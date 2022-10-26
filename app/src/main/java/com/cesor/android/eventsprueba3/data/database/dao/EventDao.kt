@@ -15,7 +15,7 @@ import com.cesor.android.eventsprueba3.data.database.entities.EventEntity
  ***/
 @Dao
 interface EventDao {
-    @Query("SELECT * FROM event_table ORDER BY name DESC")
+    @Query("SELECT * FROM event_table ORDER BY date ASC")
     suspend fun getAllEvents(): MutableList<EventEntity>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

@@ -10,7 +10,6 @@ import com.cesor.android.eventsprueba3.data.database.EventDatabase
  * Created by: César Castro on 14/10/2022 at 19:42.
  ***/
 class EventsApp: Application() {
-
     companion object{
         lateinit var database: EventDatabase
         private const val DATABASE_NAME = "events_database"

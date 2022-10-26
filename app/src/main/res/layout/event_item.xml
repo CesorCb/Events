@@ -10,9 +10,10 @@
         android:id="@+id/imgEventImage"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintDimensionRatio="H,4:2"
+        app:layout_constraintDimensionRatio="H,4:3"
         android:contentDescription="Imagen del evento"
         app:layout_constraintEnd_toEndOf="parent"
+        android:scaleType="fitXY"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -20,24 +21,29 @@
         android:id="@+id/tvEventTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="#C8C8C8"
+        android:background="#99C8C8C8"
         android:paddingHorizontal="8dp"
+        android:maxLines="1"
+        android:ellipsize="end"
         android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5"
-        android:textColor="@color/white"
+        android:textColor="@color/black"
         app:layout_constraintBottom_toBottomOf="@id/imgEventImage"
         app:layout_constraintStart_toStartOf="parent"
         tools:text="SAW GAMES 2" />
+
     <TextView
         android:id="@+id/tvDate"
+        android:gravity="center_vertical"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
-        tools:text="17/11/2022"
-        android:textSize="18sp"
+        android:layout_height="0dp"
+        android:textColor="@color/black"
+        android:background="#99C8C8C8"
         android:paddingStart="8dp"
-        app:layout_constraintStart_toEndOf="@id/tvEventTitle"
-        app:layout_constraintTop_toTopOf="@id/tvEventTitle"
-        app:layout_constraintBottom_toBottomOf="@id/tvEventTitle"/>
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toTopOf="@id/tvEventTitle"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:text="17/11/2022" />
 
     <TextView
         android:id="@+id/tvEventDescription"
@@ -69,10 +75,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
-        android:visibility="gone"
         android:background="@android:color/transparent"
         android:contentDescription="Habilitar notificaciones"
         android:src="@drawable/ic_notifications"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="@id/imgEventImage"
         app:layout_constraintTop_toTopOf="@id/imgEventImage" />
 

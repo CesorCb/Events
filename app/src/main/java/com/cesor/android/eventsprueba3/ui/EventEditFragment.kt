@@ -2,6 +2,7 @@ package com.cesor.android.eventsprueba3.ui
 
 import android.Manifest
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
@@ -21,9 +22,12 @@ import com.cesor.android.eventsprueba3.databinding.FragmentEventEditBinding
 import com.cesor.android.eventsprueba3.domain.Event
 import com.cesor.android.eventsprueba3.ui.viewModel.EventViewModel
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import kotlin.coroutines.coroutineContext
 
 
 class EventEditFragment : Fragment() {
+
+    private var mActivity : MainActivity? = null
 
     private lateinit var mBinding: FragmentEventEditBinding
     private lateinit var event: Event
@@ -72,6 +76,7 @@ class EventEditFragment : Fragment() {
         setupButtons()
         setupUiEvents()
         setupObservers()
+        mActivity = activity as? MainActivity
     }
 
     private fun setupObservers() {
@@ -79,10 +84,13 @@ class EventEditFragment : Fragment() {
     }
 
     private fun setupButtons() {
-        mBinding.btnCreateEvent.setOnClickListener { saveEvent() }
+        mBinding.btnCreateEvent.setOnClickListener {
+            saveEvent()
+        }
         mBinding.imgBtnAddImage.setOnClickListener { checkGalleryPermission() }
         mBinding.btnDelete.setOnClickListener { confirmDelete(event) }
         mBinding.etEventDate.setOnClickListener { showDatePickerDialog() }
+        mBinding.btnBack.setOnClickListener { mActivity?.onBackPressed() }
     }
 
     private fun showDatePickerDialog() {
@@ -138,6 +146,7 @@ class EventEditFragment : Fragment() {
                     Toast.LENGTH_SHORT
                 )
                     .show()
+                mActivity?.onBackPressed()
             } else {
                 event = Event(
                     name = name,
@@ -147,7 +156,9 @@ class EventEditFragment : Fragment() {
                 )
                 //Crea
                 eventViewModel.insertEvents(event)
+                setBlankFields()
                 Toast.makeText(context, "Has creado un nuevo evento", Toast.LENGTH_SHORT).show()
+                mActivity?.onBackPressed()
             }
         } else {
             Toast.makeText(requireContext(), "Debes rellenar todos los campos", Toast.LENGTH_SHORT)
@@ -181,6 +192,15 @@ class EventEditFragment : Fragment() {
         MaterialAlertDialogBuilder(requireContext()).setTitle(getString(R.string.dialog_delete_title))
             .setPositiveButton(R.string.dialog_delete_confirm) { _, _ ->
                 eventViewModel.deleteEvent(event)
+                Toast.makeText(requireContext(), "Evento eliminado",Toast.LENGTH_SHORT).show()
+                mActivity?.onBackPressed()
             }.setNegativeButton(R.string.dialog_delete_cancel, null).show()
+    }
+
+    private fun setBlankFields() {
+        mBinding.etEventName.setText("")
+        mBinding.etEventDescription.setText("")
+        mBinding.etEventDate.setText("")
+        mBinding.imgPhoto.setImageURI(null)
     }
 }
